@@ -1,18 +1,18 @@
-"""Run the canonical Italian-mother inheritance scenario."""
+"""Run the career-break demo."""
 
 from pathlib import Path
 
-from family_tax import scenario as sc
+from life_scenarios import scenario as sc
 
 
 def main():
-    s = sc.load(Path("scenarios/inheritance_italian_mother.yaml"))
+    s = sc.load(Path("scenarios/career_break_12mo.yaml"))
     result = sc.run(s)
     print(f"event: {s.event}")
     for line in result.lines:
-        print(f"  {line.jurisdiction:3s} {line.label:40s} ${line.amount:,.2f}")
-    print(f"total: ${result.total_tax_usd:,.2f}")
-    print(f"forms: {result.forms_required}")
+        print(f"  {line.label:40s} {line.value}")
+    if result.headline_metric:
+        print(f"headline: {result.headline_metric}")
     print(f"risks: {result.risks}")
 
 

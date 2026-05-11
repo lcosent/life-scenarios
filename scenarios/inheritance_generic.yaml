@@ -1,0 +1,17 @@
+event: inheritance
+notes: generic inheritance from a non-US-resident relative
+
+parties:
+  decedent:
+    country: OTHER
+    relationship: relative
+  recipient:
+    country: USA
+    residence: USA
+
+assets:
+  estate_value_usd: 600_000
+  includes_real_estate_in_decedent_country: false
+  includes_foreign_mutual_funds: false
+
+jurisdictions: ["US"]

@@ -1,53 +1,52 @@
-# family-tax-scenarios
+# life-scenarios
 
-A planning tool for **international families living in the US** to understand the financial impact of life events — inheritance, marriage, kids born abroad, dual citizenship, return to home country — *before* they happen.
+A planning tool for **major life-event decisions**. You describe your situation in YAML, pick a scenario (career break, relocation, school funding, large life transaction), and get a structured trade-off analysis with explicit numbers and risk flags.
 
 ```
-$ family-tax-scenarios run scenarios/inheritance_italian_mother.yaml
+$ life-scenarios run scenarios/career_break_12mo.yaml
 
-SCENARIO: Italian mother (Italian resident) leaves $1.2M
-          to US-resident son (dual IT/US citizen)
-─────────────────────────────────────────────────────────
-US estate tax (recipient)        $0       (US does not tax recipient)
-US gift tax (recipient)          $0       (n/a — inheritance)
-Form 3520 required               YES      (foreign gift > $100k)
-Italy succession tax (decedent)  $0       (€1M exemption per child)
-Step-up in basis (US)            YES      ($1.2M FMV at death)
-Total tax burden                 $0
+SCENARIO: 12-month sabbatical at 36 to learn a new domain
+─────────────────────────────────────────────────────────────
+runway needed                $138,000     12 months at modeled burn
+opportunity cost             $310,000     salary + RSU forfeit + match miss
+emergency buffer post-break  $30,000      recommended floor
+re-entry premium expected    +8%          historical for skilled domain switch
+breakeven year (post-return) year 4       given assumed wage path
 
 RISK FLAGS
-  • PFIC exposure if estate includes Italian mutual funds
-  • Form 3520 penalty up to 25% of gift value if not filed
-  • Italy may impose tax on Italian real estate (separate from succession)
+  • Health insurance: 12 months of COBRA at modeled $850/mo if unemployed
+  • RSU cliff: 2,400 unvested shares forfeited at departure
+  • Recovery timing: each additional month past 12 reduces re-entry rate
 
 RECOMMENDED ACTIONS
-  1. File Form 3520 with US return for the tax year of receipt.
-  2. Engage a US/IT cross-border CPA before any Italian assets are sold.
-  3. Document FMV at date of death — establishes US cost basis.
+  1. Lock in COBRA election timing before separation.
+  2. Time departure 2 weeks after next RSU vest cliff.
+  3. Build the floor first; sabbatical second.
 ```
 
-## Why this exists
+## What it is
 
-International families face stupid, expensive, avoidable tax surprises because the planning is fragmented across two or three jurisdictions and three or four advisors. A US accountant doesn't know Italian succession law. An Italian commercialista doesn't know IRS Form 3520. The family pays for the gap.
+A scenario engine. The unit is a **YAML scenario file** that describes a decision you are considering. The engine evaluates it and returns:
 
-**family-tax-scenarios** is a "what if" simulator. You describe your situation in YAML, pick a life event, and get a plain-English breakdown — across both tax systems — of who owes what, what forms must be filed, and what the recommended action is.
+- numbers (cash flows, opportunity cost, runway, deltas)
+- forms / steps required (if applicable)
+- risk flags (the things you didn't think of)
+- recommended actions
 
-It is **not tax advice**. It is a **conversation starter** for the meeting you should have with a real cross-border tax advisor.
+It is not advice. It is a **conversation starter** for the meeting you should have with the right specialist (CPA, financial advisor, attorney, immigration consultant) depending on the scenario.
 
 ## What it covers
 
-| Event | Jurisdictions | Status |
-|---|---|---|
-| Inheritance from non-US parent | US + IT, DE, UK, FR, CH | ✓ |
-| Inheritance from non-US parent (real estate) | US + IT, DE | ✓ |
-| Gift > $100k from non-US person | US (Form 3520) | ✓ |
-| Marriage to non-US-citizen spouse | US (gift tax, estate tax) | ✓ |
-| Child born abroad to US citizen | US (CRBA, FBAR) | ✓ |
-| Return to home country with US assets | US exit tax (Section 877A) | partial |
-| Selling Italian primary residence as US resident | US + IT capital gains | ✓ |
-| Receiving RSU from US employer while moving abroad | US sourcing + treaty | ✓ |
+Scenarios are organized into categories. Each category is a folder under `life_scenarios/events/`.
 
-PRs welcome. Each scenario is one YAML file under `scenarios/` and one Python module under `family_tax/events/`.
+| Category | Example scenarios |
+|---|---|
+| **Career** | sabbatical / career break, switch to self-employment |
+| **Mobility** | cross-city relocation (with COL + state tax + housing model) |
+| **Family** | kids' education funding (529 vs taxable), marriage finance planning |
+| **Money events** | inheritance modeling, large foreign gift, sale of major asset |
+
+Each scenario is hand-curated. Eight ship in the box. Easy to add your own.
 
 ## Quickstart
 
@@ -55,13 +54,15 @@ PRs welcome. Each scenario is one YAML file under `scenarios/` and one Python mo
 pip install -e .
 
 # list bundled scenarios
-family-tax-scenarios list
+life-scenarios list
 
 # run a specific scenario
-family-tax-scenarios run scenarios/inheritance_italian_mother.yaml
+life-scenarios run scenarios/career_break_12mo.yaml
 
-# describe your own situation, get a recommendation
-family-tax-scenarios interactive
+# print a template you can edit
+life-scenarios new --template career_break > my_decision.yaml
+$EDITOR my_decision.yaml
+life-scenarios run my_decision.yaml
 ```
 
 ## How it works
@@ -69,46 +70,63 @@ family-tax-scenarios interactive
 ```
    YAML scenario  ─┐
                    │
-   rules engine   ─┼─▶  per-jurisdiction computation
-   (rules/*.yaml)  │    (form lookups, thresholds, exemptions)
-                   │
-                   └─▶  flagged risks (PFIC, FBAR, 3520, ...)
+   per-event rule ─┼─▶  numeric model (Python — plain functions, no LLM)
+   modules         │
+                   └─▶  flagged risks
                               │
                               ▼
-                   LLM narrates the result in plain English
+                   optional LLM narrates plain-English summary
                               │
                               ▼
                        Recommended actions
 ```
 
-The rules engine is **plain Python**, not a model. Thresholds, exemptions, and form numbers come from `rules/*.yaml` — easy to update each year. The LLM is only used for the narrative summary and risk explanation.
+The rules engine is **plain Python**. Thresholds, exemption amounts, rate bands live in module constants — easy to bump each year. The LLM is only used for the optional narrative summary.
 
-## Scenarios bundled
+## Scenario format
+
+```yaml
+event: career_break
+notes: 12-month sabbatical at 36 to learn a new domain
+
+profile:
+  age: 36
+  salary_usd: 280_000
+  monthly_burn_usd: 11_500
+  current_savings_usd: 165_000
+  rsu_unvested_shares: 2_400
+  rsu_current_price: 185
+  employer_401k_match_rate: 0.05
+
+decision:
+  break_months: 12
+  expected_reentry_premium: 0.08
+  domain_switch: true
+
+jurisdictions: ["US"]
+```
+
+## Bundled scenarios
 
 ```
 scenarios/
-├── inheritance_italian_mother.yaml      # the canonical example
-├── inheritance_german_father.yaml
-├── inheritance_uk_grandparent.yaml
-├── marriage_us_citizen_to_eu.yaml
-├── child_born_abroad.yaml
-├── return_to_italy_with_rsus.yaml
-├── sell_italian_apartment_as_us_resident.yaml
-└── large_gift_from_foreign_parent.yaml
+├── career_break_12mo.yaml
+├── relocation_high_to_lower_col.yaml
+├── education_funding_two_kids.yaml
+├── switch_to_self_employment.yaml
+├── inheritance_generic.yaml
+├── foreign_gift_generic.yaml
+├── marriage_finance_planning.yaml
+└── sell_major_asset.yaml
 ```
 
-Each scenario file is short, hand-edited YAML you can copy and adapt to your own situation.
+All scenarios use **generic** parties and amounts. They are intentionally not identifying — use them as templates and edit locally. Files under `my_*.yaml` are gitignored.
 
 ## What this is not
 
-- **Not tax advice.** Every output ends with "consult a cross-border tax advisor before acting."
-- **Not a replacement** for Turbotax, H&R Block Expat, or a CPA. It is a *pre-CPA* tool — surfaces the questions you should be asking.
-- **Not jurisdiction-complete.** Currently covers US + IT, DE, UK, FR, CH. PRs welcome for Spain, Japan, Australia, Canada.
-- **Not real-time.** Rule data is updated annually. Always confirm current-year thresholds with your advisor.
-
-## Pricing if this were a product
-
-A reasonable user would pay **$49–$199** for a single scenario report that surfaces a $50k+ tax surprise *before* it happens. The market is real (millions of dual-resident or dual-national families in the US alone). This repo is the engine; a product would wrap it in onboarding, doc upload, and an advisor-handoff workflow.
+- **Not financial, legal, or tax advice.** Every scenario ends with "consult a qualified advisor."
+- **Not a complete financial planner.** It covers point-in-time decisions, not ongoing portfolio management.
+- **Not jurisdiction-complete.** Money-event scenarios model US plus a handful of EU jurisdictions. PRs welcome.
 
 ## License
 

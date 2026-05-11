@@ -1,0 +1,15 @@
+event: foreign_gift
+notes: generic large gift from a non-US-resident donor
+
+parties:
+  donor:
+    country: OTHER
+    is_entity: false
+  recipient:
+    country: USA
+    residence: USA
+
+assets:
+  gift_value_usd: 150_000
+
+jurisdictions: ["US"]

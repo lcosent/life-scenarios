@@ -1,0 +1,15 @@
+event: education_funding
+notes: two children, different ages and target schools
+
+profile:
+  children:
+    - name: A
+      age: 5
+      target_school_type: public_in_state
+      current_balance_usd: 8_000
+    - name: B
+      age: 2
+      target_school_type: private_4yr
+      current_balance_usd: 2_000
+
+jurisdictions: ["US"]

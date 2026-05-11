@@ -1,0 +1,14 @@
+event: switch_to_self_employment
+notes: W-2 employee considering S-corp self-employment structure
+
+profile:
+  current_w2_salary_usd: 220_000
+  employer_401k_match_annual_usd: 11_000
+  employer_health_contribution_annual_usd: 18_000
+
+decision:
+  expected_self_employed_billings_usd: 280_000
+  structure_s_corp: true
+  annual_deductible_business_expenses_usd: 20_000
+
+jurisdictions: ["US"]

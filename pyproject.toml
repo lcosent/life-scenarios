@@ -3,9 +3,9 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "family-tax-scenarios"
+name = "life-scenarios"
 version = "0.1.0"
-description = "International family life-event tax simulator"
+description = "Scenario engine for major life-event decisions"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -13,7 +13,7 @@ authors = [{ name = "Luca Cosentino" }]
 dependencies = ["openai>=1.40", "click>=8.1", "rich>=13.7", "pyyaml>=6.0"]
 
 [project.scripts]
-family-tax-scenarios = "family_tax.cli:main"
+life-scenarios = "life_scenarios.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["family_tax*"]
+include = ["life_scenarios*"]

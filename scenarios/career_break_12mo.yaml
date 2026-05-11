@@ -1,0 +1,18 @@
+event: career_break
+notes: 12-month sabbatical at age 36 to learn a new domain
+
+profile:
+  age: 36
+  salary_usd: 280_000
+  monthly_burn_usd: 11_500
+  current_savings_usd: 165_000
+  rsu_unvested_shares: 2_400
+  rsu_current_price: 185
+  employer_401k_match_rate: 0.05
+
+decision:
+  break_months: 12
+  expected_reentry_premium: 0.08
+  domain_switch: true
+
+jurisdictions: ["US"]

@@ -1,0 +1,20 @@
+event: relocation_cost
+notes: relocate from a high cost-of-living US city to a moderate European city
+
+profile:
+  monthly_housing_usd: 4_500
+  monthly_other_usd: 5_000
+  household_size: 3
+  owns_home_in_from: true
+  home_value_usd: 950_000
+  salary_usd: 280_000
+  from_state: NY
+  to_state: ""
+
+decision:
+  from_city: NYC
+  to_city: LISBON
+  one_time_moving_cost_usd: 18_000
+  school_or_childcare_delta_monthly: -2_500
+
+jurisdictions: ["US", "EU"]

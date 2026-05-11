@@ -1,0 +1,14 @@
+event: sell_major_asset
+notes: sale of a long-held real estate asset (not primary residence)
+
+parties:
+  seller:
+    filing_joint: true
+
+assets:
+  type: real_estate
+  sale_price_usd: 1_400_000
+  cost_basis_usd: 520_000
+  primary_residence_section_121_eligible: false
+
+jurisdictions: ["US"]

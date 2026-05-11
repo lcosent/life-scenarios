@@ -1,0 +1,15 @@
+event: marriage_finance_planning
+notes: dual-income couple planning marriage finance and pre-marital titling
+
+profile:
+  partner_a_salary_usd: 240_000
+  partner_b_salary_usd: 110_000
+  partner_a_pre_marital_assets_usd: 450_000
+  partner_b_pre_marital_assets_usd: 60_000
+  both_in_same_state: true
+
+decision:
+  wedding_budget_usd: 40_000
+  children_planned: true
+
+jurisdictions: ["US"]
