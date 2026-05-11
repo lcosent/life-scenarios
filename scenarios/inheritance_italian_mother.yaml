@@ -1,0 +1,19 @@
+event: inheritance
+notes: Italian mother (Italian resident, Italian citizen) leaves $1.2M to US-resident son who is dual IT/US citizen.
+
+parties:
+  decedent:
+    country: ITA
+    relationship: mother
+  recipient:
+    country: USA
+    residence: USA
+    citizenship: ["USA", "ITA"]
+    relationship: child
+
+assets:
+  estate_value_usd: 1_200_000
+  includes_real_estate_in_decedent_country: true
+  includes_foreign_mutual_funds: true
+
+jurisdictions: ["US", "IT"]

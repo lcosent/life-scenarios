@@ -1,0 +1,16 @@
+event: foreign_gift
+notes: Italian parent gifts $250,000 to US-resident child (inter vivos, not inheritance).
+
+parties:
+  donor:
+    country: ITA
+    is_entity: false
+    relationship: parent
+  recipient:
+    country: USA
+    residence: USA
+
+assets:
+  gift_value_usd: 250_000
+
+jurisdictions: ["US"]

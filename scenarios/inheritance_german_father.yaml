@@ -1,0 +1,19 @@
+event: inheritance
+notes: German father (German resident) leaves €800k to US-resident son.
+
+parties:
+  decedent:
+    country: DEU
+    relationship: father
+  recipient:
+    country: USA
+    residence: USA
+    citizenship: ["USA"]
+    relationship: child
+
+assets:
+  estate_value_usd: 880_000   # €800k * 1.10
+  includes_real_estate_in_decedent_country: false
+  includes_foreign_mutual_funds: false
+
+jurisdictions: ["US", "DE"]
